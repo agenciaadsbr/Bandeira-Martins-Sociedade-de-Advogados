@@ -23,6 +23,12 @@ vercel.json             cleanUrls, cache e headers de segurança
 - Proteções: honeypot, tempo mínimo de 2,5s, validação de DDD/celular, bloqueio de duplicado (mesmo número em 15 min no mesmo navegador).
 - Conversão: `dataLayer.push({event:'generate_lead'})` e `fbq('track','Lead')` se o Pixel estiver instalado. Colar Pixel/GTM no `<head>` (há um comentário marcando o local).
 
+## Produção
+- LP: https://lp-bandeira-martins-trabalhista.vercel.app
+- Painel de leads: https://lp-bandeira-martins-trabalhista.vercel.app/dashboard (usuário `Admin`; e-mail no Supabase Auth `admin@bandeira-martins.adsbr.internal`; acesso ao site via `lp_acessos`)
+- GitHub: agenciaadsbr/Bandeira-Martins-Sociedade-de-Advogados, pasta `trabalhista/` (a raiz do repo é a LP Luciano Lopes, projeto Vercel `lp-luciano-lopes`)
+- Vercel: projeto `lp-bandeira-martins-trabalhista` (time ADS BR), rootDirectory `trabalhista`, deploy automático a cada push na main
+
 ## Deploy (Vercel)
 1. `vercel deploy --prod` na pasta (ou arrastar a pasta em vercel.com/new). Framework: **Other**, sem build command.
 2. Após definir o domínio: preencher `<link rel="canonical">` e trocar `og:image` para URL absoluta (`https://DOMINIO/assets/img/og.jpg`).
