@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leads — Bandeira &amp; Martins</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <style>
+    :root {
+      --bg: #0a0a0a; --card: #171717; --card-2: #1f1f1f; --line: #262626; --line-2: #2e2e2e;
+      --text: #fafafa; --text-2: #a3a3a3; --muted: #737373;
+      --c-visitas: #60a5fa; --c-leads: #4ade80; --c-conv: #fbbf24;
+      --wa: #16a34a; --danger: #f87171;
+      --r: 12px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; }
+    .hidden { display: none !important; }
+
+    /* login */
+    .login { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+    .login__card { width: 100%; max-width: 360px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+    .login__brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .login__brand img { height: 34px; width: auto; }
+    .login__brand span { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+    .login h1 { font-size: 18px; font-weight: 600; margin: 0 0 4px; }
+    .login p { margin: 0 0 20px; color: var(--text-2); font-size: 13px; }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 12px; color: var(--text-2); margin-bottom: 6px; }
+    .field input { width: 100%; height: 40px; padding: 0 12px; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 10px; outline: none; }
+    .field input:focus { border-color: #525252; box-shadow: 0 0 0 3px rgba(255,255,255,.06); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--card-2); color: var(--text); cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-decoration: none; white-space: nowrap; }
+    .btn:hover { background: #262626; }
+    .btn--primary { width: 100%; height: 40px; background: var(--text); color: #0a0a0a; border-color: var(--text); font-size: 13px; letter-spacing: 0; }
+    .btn--primary:hover { background: #e5e5e5; }
+    .btn[disabled] { opacity: .6; cursor: progress; }
+    .error { display: none; margin: 0 0 12px; padding: 8px 10px; border-radius: 8px; background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.25); color: var(--danger); font-size: 12px; }
+    .error.show { display: block; }
+
+    /* app */
+    .app { max-width: 1200px; margin: 0 auto; padding: 28px 20px 48px; }
+    .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .top h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .02em; }
+    .top p { margin: 4px 0 0; color: var(--text-2); font-size: 13px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; margin-bottom: 16px; }
+    .card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .card__head h2 { margin: 0; font-size: 14px; font-weight: 600; }
+    .period { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .period label { font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+    .period input { height: 32px; padding: 0 8px; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; color-scheme: dark; }
+    .chart-wrap { position: relative; height: 280px; }
+    .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--text-2); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    .legend b { color: var(--text); font-weight: 600; margin-left: 2px; }
+    .grid2 { display: grid; grid-template-columns: 1fr; gap: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    tr:last-child td { border-bottom: 0; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .tbl { overflow-x: auto; margin: 0 -8px; }
+    .tbl--wide table { min-width: 760px; }
+    .mono { font-variant-numeric: tabular-nums; color: var(--text-2); white-space: nowrap; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line-2); font-size: 11px; color: var(--text-2); white-space: nowrap; }
+    .wa { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid rgba(22,163,74,.4); background: rgba(22,163,74,.1); color: #86efac; font-size: 12px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .wa:hover { background: rgba(22,163,74,.2); }
+    .wa svg { width: 14px; height: 14px; }
+    .empty { padding: 28px 10px; text-align: center; color: var(--muted); }
+    .status { color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) {
+      .app { padding: 18px 12px 40px; }
+      .top h1 { font-size: 16px; }
+      .card { padding: 14px; }
+      .chart-wrap { height: 230px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <main class="login" id="view-login">
+    <form class="login__card" id="login-form" novalidate>
+      <div class="login__brand"><img src="../assets/img/logo-mark.webp" width="120" height="96" alt=""><span>BANDEIRA &amp; MARTINS</span></div>
+      <h1>Painel de leads</h1>
+      <p>Entre para ver os contatos da landing page.</p>
+      <div class="error" id="login-error" role="alert"></div>
+      <div class="field">
+        <label for="usuario">Usuário</label>
+        <input id="usuario" autocomplete="username" required value="Admin">
+      </div>
+      <div class="field">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn--primary" type="submit" id="login-btn">Entrar</button>
+    </form>
+  </main>
+
+  <!-- DASHBOARD -->
+  <div class="app hidden" id="view-app">
+    <header class="top">
+      <div>
+        <h1>LEADS — BANDEIRA &amp; MARTINS</h1>
+        <p id="total-leads">Carregando…</p>
+      </div>
+      <button class="btn" type="button" id="logout">SAIR</button>
+    </header>
+
+    <section class="card">
+      <div class="card__head">
+        <h2>Evolução diária</h2>
+        <div class="period">
+          <label for="de">DE</label><input type="date" id="de">
+          <label for="ate">ATÉ</label><input type="date" id="ate">
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart" aria-label="Gráfico de visitas, cadastros e taxa de conversão por dia" role="img"></canvas></div>
+      <div class="legend">
+        <span><i style="background:var(--c-visitas)"></i>Visitas <b id="sum-visitas">0</b></span>
+        <span><i style="background:var(--c-leads)"></i>Cadastros <b id="sum-leads">0</b></span>
+        <span><i style="background:var(--c-conv)"></i>Taxa de conversão <b id="sum-conv">0%</b></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card__head"><h2>Conversão por LP</h2><span class="status" id="periodo-label"></span></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>LP</th><th class="num">Visitas</th><th class="num">Leads</th><th class="num">Conv.</th></tr></thead>
+          <tbody id="tb-conv"><tr><td colspan="4" class="empty">Carregando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card__head"><h2>Leads</h2><span class="status" id="leads-count"></span></div>
+      <div class="tbl tbl--wide">
+        <table>
+          <thead><tr><th>Nome</th><th>WhatsApp</th><th>LP</th><th>Assunto</th><th>Origem</th><th>Data</th><th>Ação</th></tr></thead>
+          <tbody id="tb-leads"><tr><td colspan="7" class="empty">Carregando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/chart.umd.min.js" defer></script>
+  <script>
+  (function () {
+    'use strict';
+    var CFG = window.LP_CONFIG;
+    var SITE = CFG.site;
+    var CLIENTE = 'Bandeira & Martins';
+    var LOGIN_MAP = { admin: 'admin@bandeira-martins.adsbr.internal' }; // usuário exibido → e-mail no Supabase Auth
+    var SKEY = 'bm_dash_session';
+    var $ = function (id) { return document.getElementById(id); };
+    var session = null, chart = null;
+
+    /* ---------- sessão (Supabase Auth via REST) ---------- */
+    function store() { try { return window.localStorage; } catch (e) { return null; } }
+    function saveSession(s) {
+      session = { access_token: s.access_token, refresh_token: s.refresh_token, expires_at: Date.now() + (s.expires_in || 3600) * 1000 };
+      var st = store(); if (st) st.setItem(SKEY, JSON.stringify(session));
+    }
+    function clearSession() { session = null; var st = store(); if (st) st.removeItem(SKEY); }
+    function loadSession() { try { var st = store(); session = st ? JSON.parse(st.getItem(SKEY) || 'null') : null; } catch (e) { session = null; } }
+
+    function authToken(grant, body) {
+      return fetch(CFG.supabaseUrl + '/auth/v1/token?grant_type=' + grant, {
+        method: 'POST',
+        headers: { apikey: CFG.supabaseKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); });
+    }
+    function ensureFresh() {
+      if (!session) return Promise.reject(new Error('sem sessão'));
+      if (Date.now() < session.expires_at - 60000) return Promise.resolve();
+      return authToken('refresh_token', { refresh_token: session.refresh_token }).then(saveSession);
+    }
+    function api(path, opts) {
+      opts = opts || {};
+      return ensureFresh().then(function () {
+        return fetch(CFG.supabaseUrl + path, {
+          method: opts.method || 'GET',
+          headers: Object.assign({ apikey: CFG.supabaseKey, Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }, opts.headers || {}),
+          body: opts.body ? JSON.stringify(opts.body) : undefined
+        });
+      }).then(function (r) {
+        if (r.status === 401) { clearSession(); showLogin('Sua sessão expirou. Entre novamente.'); throw new Error('401'); }
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r;
+      });
+    }
+
+    /* ---------- telas ---------- */
+    function showLogin(msg) {
+      $('view-app').classList.add('hidden'); $('view-login').classList.remove('hidden');
+      var e = $('login-error'); e.textContent = msg || ''; e.classList.toggle('show', !!msg);
+      setTimeout(function () { $('senha').focus(); }, 50);
+    }
+    function showApp() {
+      $('view-login').classList.add('hidden'); $('view-app').classList.remove('hidden');
+      loadAll();
+    }
+
+    $('login-form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var u = $('usuario').value.trim().toLowerCase(), p = $('senha').value;
+      var email = LOGIN_MAP[u] || (u.indexOf('@') > 0 ? u : null);
+      if (!email || !p) { showLogin('Informe usuário e senha.'); return; }
+      var btn = $('login-btn'); btn.disabled = true; btn.textContent = 'Entrando…';
+      authToken('password', { email: email, password: p }).then(function (s) {
+        saveSession(s); $('senha').value = ''; showApp();
+      }).catch(function () {
+        showLogin('Usuário ou senha incorretos.');
+      }).then(function () { btn.disabled = false; btn.textContent = 'Entrar'; });
+    });
+
+    $('logout').addEventListener('click', function () {
+      if (session) fetch(CFG.supabaseUrl + '/auth/v1/logout', { method: 'POST', headers: { apikey: CFG.supabaseKey, Authorization: 'Bearer ' + session.access_token } }).catch(function () {});
+      clearSession(); showLogin();
+    });
+
+    /* ---------- período ---------- */
+    function ymd(d) { var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+    var hoje = new Date(), inicio = new Date(); inicio.setDate(hoje.getDate() - 29);
+    $('de').value = ymd(inicio); $('ate').value = ymd(hoje);
+    ['de', 'ate'].forEach(function (id) { $(id).addEventListener('change', function () { if ($('de').value && $('ate').value) loadAll(); }); });
+
+    /* ---------- formatação ---------- */
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function fmtTel(d) { d = String(d || '').replace(/\D/g, ''); if (d.length === 11) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7); if (d.length === 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6); return d; }
+    var fmtData = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    function pct(l, v) { return v ? (l / v * 100) : 0; }
+    function pctTxt(x) { return x.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%'; }
+    function waLink(lead) {
+      var d = String(lead.whatsapp || '').replace(/\D/g, '');
+      if (d.length <= 11) d = '55' + d;
+      var primeiro = String(lead.nome || '').trim().split(' ')[0];
+      var msg = 'Olá, ' + primeiro + '. Recebemos seu contato através da ' + CLIENTE + ' e gostaria de dar continuidade ao seu atendimento.';
+      return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+    }
+    var WA_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.05 2C6.55 2 2.1 6.45 2.1 11.95c0 1.75.46 3.46 1.33 4.97L2 22l5.22-1.37a9.9 9.9 0 0 0 4.82 1.23h.01c5.5 0 9.95-4.45 9.95-9.95S17.55 2 12.05 2zm5.82 14.13c-.25.69-1.43 1.32-2 1.41-.51.07-1.16.1-1.87-.12-.43-.14-.98-.32-1.7-.63-2.98-1.29-4.93-4.29-5.08-4.49-.14-.2-1.21-1.62-1.21-3.08 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37h.57c.18.01.43-.07.67.51.25.6.84 2.07.92 2.22.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.38-.45.52-.15.14-.3.3-.13.6.18.3.77 1.27 1.65 2.06 1.13 1.01 2.08 1.32 2.38 1.47.3.15.47.13.64-.07.17-.2.74-.86.94-1.16.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.08.12.08.72-.17 1.41z"/></svg>';
+
+    /* ---------- carga de dados ---------- */
+    function loadAll() {
+      var de = $('de').value, ate = $('ate').value;
+      $('periodo-label').textContent = de.split('-').reverse().join('/') + ' a ' + ate.split('-').reverse().join('/');
+
+      // total geral (todas as datas)
+      api('/rest/v1/lp_leads?select=id&site=eq.' + SITE, { method: 'HEAD', headers: { Prefer: 'count=exact', Range: '0-0' } })
+        .then(function (r) {
+          var total = parseInt((r.headers.get('content-range') || '').split('/')[1] || '0', 10) || 0;
+          $('total-leads').textContent = total + (total === 1 ? ' lead no total' : ' leads no total');
+        }).catch(function () { $('total-leads').textContent = 'Não foi possível carregar o total.'; });
+
+      // série diária
+      api('/rest/v1/rpc/lp_dashboard_daily', { method: 'POST', body: { desde: de, ate: ate } })
+        .then(function (r) { return r.json(); })
+        .then(function (rows) { renderDaily(rows.filter(function (x) { return x.site === SITE; }), de, ate); })
+        .catch(function (e) { if (e.message !== '401') { $('tb-conv').innerHTML = '<tr><td colspan="4" class="empty">Erro ao carregar os dados.</td></tr>'; } });
+
+      // leads do período
+      var desdeISO = new Date(de + 'T00:00:00-03:00').toISOString();
+      var ateISO = new Date(ate + 'T23:59:59.999-03:00').toISOString();
+      api('/rest/v1/lp_leads?select=id,nome,whatsapp,origem,servico,site,created_at&site=eq.' + SITE +
+          '&created_at=gte.' + encodeURIComponent(desdeISO) + '&created_at=lte.' + encodeURIComponent(ateISO) + '&order=created_at.desc&limit=2000')
+        .then(function (r) { return r.json(); })
+        .then(renderLeads)
+        .catch(function (e) { if (e.message !== '401') { $('tb-leads').innerHTML = '<tr><td colspan="7" class="empty">Erro ao carregar os leads.</td></tr>'; } });
+    }
+
+    function renderDaily(rows, de, ate) {
+      // garante todos os dias do período, mesmo sem registros
+      var map = {}; rows.forEach(function (r) { map[r.dia] = r; });
+      var labels = [], vis = [], cad = [], conv = [];
+      for (var d = new Date(de + 'T12:00:00'); ymd(d) <= ate; d.setDate(d.getDate() + 1)) {
+        var k = ymd(d), r = map[k] || { visitas: 0, cadastros: 0 };
+        labels.push(k.slice(8, 10) + '/' + k.slice(5, 7));
+        vis.push(+r.visitas); cad.push(+r.cadastros); conv.push(+pct(+r.cadastros, +r.visitas).toFixed(1));
+      }
+      var sv = vis.reduce(function (a, b) { return a + b; }, 0), sl = cad.reduce(function (a, b) { return a + b; }, 0);
+      $('sum-visitas').textContent = sv.toLocaleString('pt-BR');
+      $('sum-leads').textContent = sl.toLocaleString('pt-BR');
+      $('sum-conv').textContent = pctTxt(pct(sl, sv));
+
+      $('tb-conv').innerHTML = (sv || sl)
+        ? '<tr><td>' + esc(SITE) + '</td><td class="num">' + sv.toLocaleString('pt-BR') + '</td><td class="num">' + sl.toLocaleString('pt-BR') + '</td><td class="num">' + pctTxt(pct(sl, sv)) + '</td></tr>'
+        : '<tr><td colspan="4" class="empty">Nenhum dado encontrado</td></tr>';
+
+      drawChart(labels, vis, cad, conv);
+    }
+
+    function drawChart(labels, vis, cad, conv) {
+      if (!window.Chart) { setTimeout(function () { drawChart(labels, vis, cad, conv); }, 150); return; }
+      var css = getComputedStyle(document.documentElement);
+      var cV = css.getPropertyValue('--c-visitas').trim(), cL = css.getPropertyValue('--c-leads').trim(), cC = css.getPropertyValue('--c-conv').trim();
+      var data = {
+        labels: labels,
+        datasets: [
+          { label: 'Visitas', data: vis, borderColor: cV, backgroundColor: cV, yAxisID: 'y', tension: .3, pointRadius: 0, pointHoverRadius: 4, borderWidth: 2 },
+          { label: 'Cadastros', data: cad, borderColor: cL, backgroundColor: cL, yAxisID: 'y', tension: .3, pointRadius: 0, pointHoverRadius: 4, borderWidth: 2 },
+          { label: 'Conversão %', data: conv, borderColor: cC, backgroundColor: cC, yAxisID: 'y1', tension: .3, pointRadius: 0, pointHoverRadius: 4, borderWidth: 1.5, borderDash: [4, 4] }
+        ]
+      };
+      var grid = { color: '#262626', drawTicks: false }, ticks = { color: '#737373', font: { size: 11 } };
+      if (chart) { chart.data = data; chart.update(); return; }
+      chart = new Chart($('chart'), {
+        type: 'line', data: data,
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: '#0a0a0a', borderColor: '#2e2e2e', borderWidth: 1, titleColor: '#fafafa', bodyColor: '#d4d4d4', padding: 10,
+              callbacks: { label: function (c) { return ' ' + c.dataset.label + ': ' + (c.dataset.yAxisID === 'y1' ? pctTxt(c.parsed.y) : c.parsed.y.toLocaleString('pt-BR')); } } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: Object.assign({ maxRotation: 0, autoSkipPadding: 12 }, ticks), border: { color: '#262626' } },
+            y: { beginAtZero: true, grid: grid, ticks: Object.assign({ precision: 0, padding: 8 }, ticks), border: { display: false } },
+            y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: Object.assign({ padding: 8, callback: function (v) { return v + '%'; } }, ticks), border: { display: false } }
+          }
+        }
+      });
+    }
+
+    function renderLeads(leads) {
+      $('leads-count').textContent = leads.length + (leads.length === 1 ? ' lead no período' : ' leads no período');
+      if (!leads.length) { $('tb-leads').innerHTML = '<tr><td colspan="7" class="empty">Nenhum lead encontrado</td></tr>'; return; }
+      $('tb-leads').innerHTML = leads.map(function (l) {
+        return '<tr>' +
+          '<td>' + esc(l.nome) + '</td>' +
+          '<td class="mono">' + esc(fmtTel(l.whatsapp)) + '</td>' +
+          '<td><span class="tag">' + esc(l.site) + '</span></td>' +
+          '<td>' + (l.servico ? esc(l.servico) : '<span class="status">—</span>') + '</td>' +
+          '<td>' + esc(l.origem || 'direto') + '</td>' +
+          '<td class="mono">' + esc(fmtData.format(new Date(l.created_at))) + '</td>' +
+          '<td><a class="wa" href="' + esc(waLink(l)) + '" target="_blank" rel="noopener">' + WA_ICON + 'WhatsApp</a></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    /* ---------- início ---------- */
+    loadSession();
+    if (session) { ensureFresh().then(showApp).catch(function () { clearSession(); showLogin(); }); }
+    else showLogin();
+  })();
+  </script>
+</body>
+</html>
